@@ -1,0 +1,69 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.IO;
+
+
+namespace Rextester
+
+{
+    public class Program
+    {
+        struct body
+        {
+            public double cord_x;
+            public double cord_y;
+        }
+        public static void Main(string[] args)
+
+        {
+        
+            string cin = @"C:\Users\Vasilyev.Viacheslav\source\repos\ConsoleApp2\1.txt";
+            string output = @"C:\Users\Vasilyev.Viacheslav\source\repos\ConsoleApp2\2.txt";
+            if (File.Exists(cin))
+            {
+
+                _ = File.ReadAllText(cin);
+                _ = new string[2];
+                File.WriteAllText(output, string.Empty);
+                string[] readEveryLine = File.ReadAllLines(cin);
+                body[] body = new body[26];
+                string anglestr = readEveryLine[0];
+                string forsestr = readEveryLine[1]; ;
+                double angle = Convert.ToDouble(anglestr);
+                double forse = Convert.ToDouble(forsestr);
+                double fx = forse * Math.Cos(angle);
+                double fy = forse * Math.Sin(angle);
+                const double gravity = 9.81;
+                double time_travel = 2 * fy / gravity;
+                double i = 0;
+                int k = 0;
+                while (i < time_travel)
+                {
+                    body[k].cord_x = fx * i;
+                    body[k].cord_y = fy * i - gravity * i * i / 2;
+                    i += time_travel / 25;
+                    k += 1;
+                }
+                body[25].cord_x = 2 * fx * fy / gravity;
+                body[25].cord_y = 0;
+
+
+                for (int j = 0; j < body.Length; ++j)
+                {
+                    File.AppendAllText(output, body[j].cord_x + "|" + body[j].cord_y);
+                    File.AppendAllText(output, "\n");
+                }
+            }
+            else {
+                    Console.WriteLine(File.Exists(cin) ? "File exists." : "File does not exist.");
+                File.AppendAllText(output, "File does not exist.");
+            }
+        }
+
+    }
+
+
+
+}
